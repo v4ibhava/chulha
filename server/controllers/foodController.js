@@ -1,6 +1,5 @@
 import Food from '../models/Food.js';
-import fs from 'fs';
-import path from 'path';
+import { cloudinary } from '../config/cloudinary.js';
 
 export const getFoods = async (req, res) => {
   const { category, search, page = 1, limit = 12 } = req.query;
@@ -23,8 +22,9 @@ export const getFood = async (req, res) => {
 
 export const createFood = async (req, res) => {
   const { name, description, price, category, isAvailable, rating } = req.body;
-  const image = req.file ? `/uploads/${req.file.filename}` : '';
-  const food = await Food.create({ name, description, price, category, image, isAvailable, rating });
+  const image = req.file ? req.file.path : '';
+  const imagePublicId = req.file ? req.file.filename : '';
+  const food = await Food.create({ name, description, price, category, image, imagePublicId, isAvailable, rating });
   res.status(201).json({ success: true, food });
 };
 
@@ -39,11 +39,11 @@ export const updateFood = async (req, res) => {
   if (isAvailable !== undefined) food.isAvailable = isAvailable;
   if (rating !== undefined) food.rating = rating;
   if (req.file) {
-    if (food.image) {
-      const oldPath = path.join('uploads', path.basename(food.image));
-      if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+    if (food.imagePublicId) {
+      await cloudinary.uploader.destroy(food.imagePublicId);
     }
-    food.image = `/uploads/${req.file.filename}`;
+    food.image = req.file.path;
+    food.imagePublicId = req.file.filename;
   }
   await food.save();
   res.json({ success: true, food });
@@ -52,9 +52,8 @@ export const updateFood = async (req, res) => {
 export const deleteFood = async (req, res) => {
   const food = await Food.findById(req.params.id);
   if (!food) return res.status(404).json({ success: false, message: 'Food not found' });
-  if (food.image) {
-    const filePath = path.join('uploads', path.basename(food.image));
-    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+  if (food.imagePublicId) {
+    await cloudinary.uploader.destroy(food.imagePublicId);
   }
   await food.deleteOne();
   res.json({ success: true, message: 'Food deleted' });

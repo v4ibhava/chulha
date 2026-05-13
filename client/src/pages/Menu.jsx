@@ -45,16 +45,16 @@ export default function Menu() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Our Menu</h1>
+      <h1 className="text-2xl font-black text-charcoal-900 mb-6">Our Menu</h1>
       <div className="flex flex-col md:flex-row gap-4 mb-8">
         <div className="flex-1">
           <SearchBar value={search} onChange={handleSearch} />
         </div>
       </div>
       <div className="flex flex-wrap gap-2 mb-8">
-        <button onClick={() => handleCategory('')} className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${!activeCategory ? 'bg-primary-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>All</button>
+        <button onClick={() => handleCategory('')} className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${!activeCategory ? 'bg-charcoal-900 text-white shadow-md' : 'bg-neutral-100 text-charcoal-600 hover:bg-neutral-200 border border-neutral-200'}`}>All</button>
         {categories.map(cat => (
-          <button key={cat._id} onClick={() => handleCategory(cat._id)} className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeCategory === cat._id ? 'bg-primary-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>{cat.name}</button>
+          <button key={cat._id} onClick={() => handleCategory(cat._id)} className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${activeCategory === cat._id ? 'bg-primary-500 text-white shadow-md shadow-primary-500/20' : 'bg-neutral-100 text-charcoal-600 hover:bg-neutral-200 border border-neutral-200'}`}>{cat.name}</button>
         ))}
       </div>
       {loading ? (
@@ -62,7 +62,7 @@ export default function Menu() {
           {Array.from({ length: 8 }).map((_, i) => <FoodCardSkeleton key={i} />)}
         </div>
       ) : foods.length === 0 ? (
-        <div className="text-center py-16 text-gray-500"><FaceFrownIcon className="w-14 h-14 mx-auto mb-4" /><p className="text-lg">No foods found</p></div>
+        <div className="text-center py-16"><div className="w-14 h-14 bg-neutral-100 rounded-2xl flex items-center justify-center mx-auto mb-4"><FaceFrownIcon className="w-7 h-7 text-charcoal-400" /></div><p className="text-lg font-bold text-charcoal-700">No foods found</p></div>
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -71,7 +71,7 @@ export default function Menu() {
           {totalPages > 1 && (
             <div className="flex justify-center gap-2 mt-8">
               {Array.from({ length: totalPages }).map((_, i) => (
-                <button key={i} onClick={() => setPage(i + 1)} className={`w-10 h-10 rounded-lg font-medium transition-all ${page === i + 1 ? 'bg-primary-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>{i + 1}</button>
+                <button key={i} onClick={() => setPage(i + 1)} className={`w-10 h-10 rounded-xl font-bold text-sm transition-all ${page === i + 1 ? 'bg-primary-500 text-white shadow-md shadow-primary-500/20' : 'bg-neutral-100 text-charcoal-600 hover:bg-neutral-200 border border-neutral-200'}`}>{i + 1}</button>
               ))}
             </div>
           )}

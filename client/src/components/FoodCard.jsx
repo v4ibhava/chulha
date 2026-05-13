@@ -1,39 +1,60 @@
 import { useCart } from '../context/CartContext';
 import toast from 'react-hot-toast';
-import { StarIcon, CircleStackIcon } from '@heroicons/react/24/solid';
+import { StarIcon, ShoppingCartIcon } from '@heroicons/react/24/solid';
 
 export default function FoodCard({ food }) {
   const { addItem } = useCart();
-  const handleAdd = () => {
+  const handleAdd = (e) => {
+    e.preventDefault();
     addItem({ _id: food._id, name: food.name, price: food.price, image: food.image });
     toast.success(`${food.name} added to cart`);
   };
 
   return (
-    <div className="card overflow-hidden animate-fade-in group">
-      <div className="relative h-48 bg-gray-200 overflow-hidden">
+    <div className="card group animate-fade-in">
+      <div className="relative h-40 bg-neutral-200 overflow-hidden">
         {food.image ? (
-          <img src={food.image} alt={food.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+          <img 
+            src={food.image} 
+            alt={food.name} 
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+          />
         ) : (
-          <CircleStackIcon className="w-12 h-12 text-gray-300" />
+          <div className="w-full h-full flex items-center justify-center bg-neutral-200 text-neutral-400">
+            No Image
+          </div>
         )}
-        {!food.isAvailable && <div className="absolute inset-0 bg-black/50 flex items-center justify-center"><span className="text-white font-bold text-lg">Unavailable</span></div>}
-      </div>
-      <div className="p-4">
-        <div className="flex items-start justify-between mb-2">
-          <h3 className="font-semibold text-gray-900">{food.name}</h3>
-          <span className="text-primary-500 font-bold">₹{food.price}</span>
-        </div>
-        <p className="text-sm text-gray-500 mb-3 line-clamp-2">{food.description}</p>
-        <div className="flex items-center justify-between">
-          <span className="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-600">{food.category?.name}</span>
-          <div className="flex items-center gap-1 text-sm text-yellow-500">
-            <StarIcon className="w-4 h-4 text-yellow-500" />
-            <span>{food.rating || '0.0'}</span>
+        <div className="absolute top-4 right-4 z-10">
+          <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1.5 border border-white/50">
+            <StarIcon className="w-3.5 h-3.5 text-primary-500" />
+            <span className="text-xs font-black text-charcoal-800">{food.rating || '4.5'}</span>
           </div>
         </div>
-        <button onClick={handleAdd} disabled={!food.isAvailable} className="btn-primary w-full mt-3 text-sm">
-          {food.isAvailable ? 'Add to Cart' : 'Sold Out'}
+        {!food.isAvailable && (
+          <div className="absolute inset-0 bg-charcoal-900/60 backdrop-blur-[2px] flex items-center justify-center z-20">
+            <span className="text-white font-black text-xl tracking-widest uppercase border-2 border-white/30 px-6 py-2 rounded-xl">Sold Out</span>
+          </div>
+        )}
+      </div>
+      
+      <div className="p-3">
+        <div className="flex items-center justify-between mb-1.5">
+          <span className="text-[9px] font-black text-primary-500 uppercase tracking-widest bg-red-50 px-1.5 py-0.5 rounded-md">
+            {food.category?.name || 'Category'}
+          </span>
+          <span className="text-base font-display font-black text-primary-500">₹{food.price}</span>
+        </div>
+        
+        <h3 className="font-display font-black text-base text-charcoal-900 mb-1 truncate">{food.name}</h3>
+        <p className="text-xs text-charcoal-500 mb-3 line-clamp-2 min-h-[2rem] leading-relaxed">{food.description}</p>
+        
+        <button 
+          onClick={handleAdd} 
+          disabled={!food.isAvailable} 
+          className="w-full btn-primary py-2.5 flex items-center justify-center gap-1.5 text-xs"
+        >
+          <ShoppingCartIcon className="w-4 h-4" />
+          Add to Cart
         </button>
       </div>
     </div>

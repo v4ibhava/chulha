@@ -1,28 +1,53 @@
 import { Link } from 'react-router-dom';
-import { FireIcon, SparklesIcon } from '@heroicons/react/24/solid';
+import { ShoppingBagIcon } from '@heroicons/react/24/solid';
 
 export default function HeroSection() {
   return (
-    <section className="relative bg-gradient-to-br from-primary-500 to-primary-700 text-white overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 py-20 md:py-32">
-        <div className="max-w-2xl animate-fade-in">
-          <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
-            Delicious Food, <br />Delivered <span className="text-yellow-300">Fast</span>
-          </h1>
-          <p className="text-lg md:text-xl text-primary-100 mb-8">
-            Order your favorite meals from the best restaurants in town. Fresh, hot, and quick!
-          </p>
-          <div className="flex gap-4">
-            <Link to="/menu" className="bg-white text-primary-600 font-bold py-3 px-8 rounded-lg hover:bg-yellow-300 hover:text-gray-900 transition-all duration-200">
-              Order Now
-            </Link>
-            <Link to="/menu" className="border-2 border-white text-white font-bold py-3 px-8 rounded-lg hover:bg-white hover:text-primary-600 transition-all duration-200">
-              View Menu
-            </Link>
+    <section className="relative min-h-[55vh] flex items-center pt-10 overflow-hidden bg-white">
+      <div className="max-w-7xl mx-auto px-4 w-full relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-center">
+          <div className="lg:col-span-3 animate-slide-in">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-50 text-primary-600 rounded-full text-xs font-bold mb-4">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
+              </span>
+              Now serving all across the city
+            </div>
+
+            <h1 className="text-3xl md:text-5xl font-display font-extrabold text-charcoal-900 leading-[1.15] mb-3">
+              From the Heart <br />
+              <span className="text-primary-500">to your Hearth.</span>
+            </h1>
+
+            <p className="text-base md:text-lg text-charcoal-500 leading-relaxed mb-5 max-w-md">
+              Experience the authentic taste of artisanal cooking, prepared with passion and delivered with precision.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link to="/menu" className="btn-primary flex items-center justify-center gap-2 text-sm py-3 px-6">
+                <ShoppingBagIcon className="w-4 h-4" />
+                Explore Menu
+              </Link>
+              <Link to="/menu" className="btn-outline flex items-center justify-center gap-2 text-sm py-3 px-6">
+                How it works
+              </Link>
+            </div>
+          </div>
+
+          <div className="lg:col-span-2 relative animate-fade-in hidden lg:block">
+            <div className="relative z-10 rounded-2xl overflow-hidden shadow-xl shadow-primary-500/15 transform hover:scale-[1.02] transition-transform duration-500">
+              <img
+                src="/images/hero-home.png"
+                alt="Delicious Artisanal Food"
+                className="w-full h-56 object-cover"
+              />
+            </div>
+            <div className="absolute -top-6 -right-6 w-36 h-36 bg-primary-500/10 rounded-full blur-3xl -z-10" />
+            <div className="absolute -bottom-6 -left-6 w-36 h-36 bg-charcoal-900/5 rounded-full blur-3xl -z-10" />
           </div>
         </div>
       </div>
-      <div className="absolute -bottom-16 -right-16 opacity-10 hidden md:block"><FireIcon className="inline w-24 h-24 mr-6" /><SparklesIcon className="inline w-24 h-24 mr-6" /><FireIcon className="inline w-24 h-24" /></div>
     </section>
   );
 }

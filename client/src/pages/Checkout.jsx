@@ -41,38 +41,40 @@ export default function Checkout() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Checkout</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <h1 className="text-2xl font-black text-charcoal-900 mb-8">Checkout</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Delivery Address</label>
-            <textarea value={form.shippingAddress} onChange={e => setForm({ ...form, shippingAddress: e.target.value })} className="input-field" rows={3} required />
+          <div className="bg-white rounded-2xl shadow-xl shadow-charcoal-900/5 border border-neutral-100 p-5 space-y-4">
+            <div>
+              <label className="block text-sm font-bold text-charcoal-700 mb-1">Delivery Address</label>
+              <textarea value={form.shippingAddress} onChange={e => setForm({ ...form, shippingAddress: e.target.value })} className="input-field" rows={3} required />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-charcoal-700 mb-1">Phone Number</label>
+              <input type="tel" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className="input-field" required />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-charcoal-700 mb-1">Payment Method</label>
+              <select value={form.paymentMethod} onChange={e => setForm({ ...form, paymentMethod: e.target.value })} className="input-field">
+                <option value="cod">Cash on Delivery</option>
+                <option value="card">Card Payment</option>
+              </select>
+            </div>
+            <button type="submit" disabled={submitting} className="btn-primary w-full">
+              {submitting ? 'Placing Order...' : `Place Order - ₹${totalPrice}`}
+            </button>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-            <input type="tel" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className="input-field" required />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Payment Method</label>
-            <select value={form.paymentMethod} onChange={e => setForm({ ...form, paymentMethod: e.target.value })} className="input-field">
-              <option value="cod">Cash on Delivery</option>
-              <option value="card">Card Payment</option>
-            </select>
-          </div>
-          <button type="submit" disabled={submitting} className="btn-primary w-full">
-            {submitting ? 'Placing Order...' : `Place Order - ₹${totalPrice}`}
-          </button>
         </form>
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h3 className="font-semibold text-lg mb-4">Order Summary</h3>
+        <div className="bg-white rounded-2xl shadow-xl shadow-charcoal-900/5 border border-neutral-100 p-5 h-fit">
+          <h3 className="font-bold text-lg text-charcoal-900 mb-4">Order Summary</h3>
           {items.map(item => (
-            <div key={item._id} className="flex justify-between py-2 text-sm border-b border-gray-100">
-              <span>{item.name} × {item.qty}</span>
-              <span className="font-medium">₹{item.price * item.qty}</span>
+            <div key={item._id} className="flex justify-between py-2 text-sm border-b border-neutral-100">
+              <span className="text-charcoal-700">{item.name} × {item.qty}</span>
+              <span className="font-bold text-charcoal-900">₹{item.price * item.qty}</span>
             </div>
           ))}
-          <div className="flex justify-between pt-4 text-lg font-bold">
-            <span>Total</span>
+          <div className="flex justify-between pt-4 text-lg font-black">
+            <span className="text-charcoal-900">Total</span>
             <span className="text-primary-500">₹{totalPrice}</span>
           </div>
         </div>

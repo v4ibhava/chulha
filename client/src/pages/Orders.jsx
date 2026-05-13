@@ -22,35 +22,37 @@ export default function Orders() {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">My Orders</h1>
+    <div className="max-w-3xl mx-auto px-4 py-8">
+      <h1 className="text-2xl font-black text-charcoal-900 mb-8">My Orders</h1>
       {loading ? <TableSkeleton /> : orders.length === 0 ? (
         <div className="text-center py-16">
-          <ClipboardDocumentListIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-          <p className="text-lg text-gray-500 mb-4">No orders yet</p>
-          <Link to="/menu" className="btn-primary">Start Ordering</Link>
+          <div className="w-16 h-16 bg-neutral-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <ClipboardDocumentListIcon className="w-8 h-8 text-charcoal-400" />
+          </div>
+          <p className="text-lg font-bold text-charcoal-700 mb-4">No orders yet</p>
+          <Link to="/menu" className="btn-primary text-sm">Start Ordering</Link>
         </div>
       ) : (
         <div className="space-y-4">
           {orders.map(order => (
-            <div key={order._id} className="bg-white rounded-xl shadow-sm p-6 animate-fade-in">
+            <div key={order._id} className="bg-white rounded-2xl shadow-xl shadow-charcoal-900/5 border border-neutral-100 p-5 animate-fade-in">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <span className="text-sm text-gray-500">Order #{order._id.slice(-8).toUpperCase()}</span>
-                  <span className={`ml-3 px-3 py-1 rounded-full text-xs font-medium ${statusColors[order.status]}`}>{order.status}</span>
+                  <span className="text-xs font-bold text-charcoal-500">Order #{order._id.slice(-8).toUpperCase()}</span>
+                  <span className={`ml-2 px-2.5 py-1 rounded-lg text-[10px] font-bold ${statusColors[order.status]}`}>{order.status}</span>
                 </div>
-                <span className="text-primary-500 font-bold">₹{order.totalAmount}</span>
+                <span className="text-primary-500 font-black">₹{order.totalAmount}</span>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {order.items?.map(item => (
-                  <div key={item._id} className="flex items-center gap-3 text-sm">
-                    <span className="text-gray-400">{item.quantity}x</span>
-                    <span className="font-medium">{item.food?.name || 'Item'}</span>
-                    <span className="text-gray-500">₹{item.price}</span>
+                  <div key={item._id} className="flex items-center gap-2 text-sm">
+                    <span className="text-charcoal-400 font-bold">{item.quantity}x</span>
+                    <span className="font-bold text-charcoal-900">{item.food?.name || 'Item'}</span>
+                    <span className="text-charcoal-500">₹{item.price}</span>
                   </div>
                 ))}
               </div>
-              <div className="mt-3 text-xs text-gray-400">
+              <div className="mt-3 text-[11px] text-charcoal-400 font-medium">
                 Ordered on {new Date(order.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
               </div>
             </div>

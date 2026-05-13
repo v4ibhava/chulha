@@ -2,12 +2,24 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+const addressSchema = new mongoose.Schema({
+  label: { type: String, default: 'Home' },
+  street: { type: String, required: [true, 'Street address is required'], trim: true },
+  city: { type: String, default: '' },
+  state: { type: String, default: '' },
+  pincode: { type: String, default: '' },
+  lat: { type: Number },
+  lng: { type: Number },
+  isDefault: { type: Boolean, default: false },
+}, { _id: true });
+
 const userSchema = new mongoose.Schema({
   name: { type: String, required: [true, 'Name is required'], trim: true },
   email: { type: String, required: [true, 'Email is required'], unique: true, lowercase: true, trim: true },
   password: { type: String, required: [true, 'Password is required'], minlength: 6, select: false },
   phone: { type: String, default: '' },
   address: { type: String, default: '' },
+  addresses: [addressSchema],
   role: { type: String, enum: ['customer', 'admin'], default: 'customer' },
 }, { timestamps: true });
 

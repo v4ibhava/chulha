@@ -29,3 +29,53 @@ export const updateProfile = async (req, res) => {
   const user = await User.findByIdAndUpdate(req.user.id, { name, phone, address }, { new: true, runValidators: true });
   res.json({ success: true, user });
 };
+
+export const addAddress = async (req, res) => {
+  const { label, street, city, state, pincode, lat, lng, isDefault } = req.body;
+  if (!street) return res.status(400).json({ success: false, message: 'Street address is required' });
+  const user = await User.findById(req.user.id);
+  if (isDefault) {
+    user.addresses.forEach(a => a.isDefault = false);
+  }
+  const addrData = { label: label || 'Home', street, city, state, pincode, isDefault: user.addresses.length === 0 ? true : !!isDefault };
+  if (lat !== undefined) addrData.lat = lat;
+  if (lng !== undefined) addrData.lng = lng;
+  user.addresses.push(addrData);
+  await user.save();
+  res.json({ success: true, user });
+};
+
+export const editAddress = async (req, res) => {
+  const { id } = req.params;
+  const { label, street, city, state, pincode, lat, lng, isDefault } = req.body;
+  const user = await User.findById(req.user.id);
+  const addr = user.addresses.id(id);
+  if (!addr) return res.status(404).json({ success: false, message: 'Address not found' });
+  if (isDefault) {
+    user.addresses.forEach(a => a.isDefault = false);
+  }
+  if (label !== undefined) addr.label = label;
+  if (street !== undefined) addr.street = street;
+  if (city !== undefined) addr.city = city;
+  if (state !== undefined) addr.state = state;
+  if (pincode !== undefined) addr.pincode = pincode;
+  if (lat !== undefined) addr.lat = lat;
+  if (lng !== undefined) addr.lng = lng;
+  if (isDefault !== undefined) addr.isDefault = isDefault;
+  await user.save();
+  res.json({ success: true, user });
+};
+
+export const deleteAddress = async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(req.user.id);
+  const addr = user.addresses.id(id);
+  if (!addr) return res.status(404).json({ success: false, message: 'Address not found' });
+  const wasDefault = addr.isDefault;
+  user.addresses.pull(id);
+  if (wasDefault && user.addresses.length > 0) {
+    user.addresses[0].isDefault = true;
+  }
+  await user.save();
+  res.json({ success: true, user });
+};

@@ -1,14 +1,78 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  body { @apply bg-gray-50 text-gray-900 antialiased; }
+@theme {
+  /* Chulha Primary Colors (Deep Orange) */
+  --color-primary-50: #fff7ed;
+  --color-primary-100: #ffedd5;
+  --color-primary-200: #fed7aa;
+  --color-primary-300: #fdba74;
+  --color-primary-400: #fb923c;
+  --color-primary-500: #d35400;
+  --color-primary-600: #b34700;
+  --color-primary-700: #933a00;
+  --color-primary-800: #732d00;
+  --color-primary-900: #532000;
+
+  /* Charcoal Colors */
+  --color-charcoal-50: #f6f7f9;
+  --color-charcoal-100: #eceef2;
+  --color-charcoal-200: #d5dae2;
+  --color-charcoal-300: #b1bac9;
+  --color-charcoal-400: #8694aa;
+  --color-charcoal-500: #64768a;
+  --color-charcoal-600: #4c5e71;
+  --color-charcoal-700: #2c3e50;
+  --color-charcoal-800: #1a2530;
+  --color-charcoal-900: #0d1318;
+
+  /* Neutral Colors */
+  --color-neutral-50: #fdfcfb;
+  --color-neutral-100: #f9f7f2;
+  --color-neutral-200: #f0eee9;
+  --color-neutral-300: #e4e2dd;
+  --color-neutral-400: #dbdad5;
+
+  /* Fonts */
+  --font-sans: "Be Vietnam Pro", sans-serif;
+  --font-display: "Plus Jakarta Sans", sans-serif;
+
+  /* Animations */
+  --animate-fade-in: fadeIn 0.3s ease-out;
+  --animate-slide-up: slideUp 0.3s ease-out;
+  --animate-slide-in: slideIn 0.3s ease-out;
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slideUp {
+    from { transform: translateY(10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes slideIn {
+    from { transform: translateX(-10px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
 }
 
-@layer components {
-  .btn-primary { @apply bg-primary-500 hover:bg-primary-600 text-white font-medium py-2.5 px-6 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed; }
-  .btn-outline { @apply border-2 border-primary-500 text-primary-500 hover:bg-primary-50 font-medium py-2.5 px-6 rounded-lg transition-all duration-200; }
-  .input-field { @apply w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all duration-200; }
-  .card { @apply bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300; }
+/* Base Styles */
+body {
+  @apply bg-neutral-100 text-charcoal-800 antialiased font-sans;
+}
+h1, h2, h3, h4, h5, h6 {
+  @apply font-display;
+}
+
+/* Component Styles */
+.btn-primary {
+  @apply bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-6 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md;
+}
+.btn-outline {
+  @apply border-2 border-primary-500 text-primary-500 hover:bg-primary-50 font-semibold py-2.5 px-6 rounded-lg transition-all duration-200;
+}
+.input-field {
+  @apply w-full px-4 py-2.5 border border-neutral-300 bg-white rounded-lg focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none transition-all duration-200;
+}
+.card {
+  @apply bg-white rounded-2xl shadow-[0px_2px_12px_rgba(211,84,0,0.05)] hover:shadow-[0px_4px_20px_rgba(211,84,0,0.08)] transition-all duration-300 border border-neutral-200;
 }

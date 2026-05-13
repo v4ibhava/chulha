@@ -41,7 +41,7 @@ export const getAllOrders = async (req, res) => {
   if (status) query.status = status;
   const skip = (page - 1) * limit;
   const [orders, total] = await Promise.all([
-    Order.find(query).populate('user', 'name email').populate('items.food').skip(skip).limit(Number(limit)).sort('-createdAt'),
+    Order.find(query).populate('user', 'name email phone addresses').populate('items.food').skip(skip).limit(Number(limit)).sort('-createdAt'),
     Order.countDocuments(query),
   ]);
   res.json({ success: true, orders, total, page: Number(page), pages: Math.ceil(total / limit) });
