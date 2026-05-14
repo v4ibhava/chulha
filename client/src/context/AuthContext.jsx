@@ -38,6 +38,28 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const sendOtp = async (email) => {
+    const { data } = await api.post('/auth/send-otp', { email });
+    return data;
+  };
+
+  const verifyOtp = async (email, otp) => {
+    const { data } = await api.post('/auth/verify-otp', { email, otp });
+    localStorage.setItem('token', data.token);
+    setUser(data.user);
+    return data;
+  };
+
+  const forgotPassword = async (email) => {
+    const { data } = await api.post('/auth/forgot-password', { email });
+    return data;
+  };
+
+  const resetPassword = async (email, otp, password) => {
+    const { data } = await api.post('/auth/reset-password', { email, otp, password });
+    return data;
+  };
+
   const addAddress = async (addressData) => {
     const { data } = await api.post('/auth/address', addressData);
     setUser(data.user);
@@ -57,7 +79,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, addAddress, editAddress, deleteAddress }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, sendOtp, verifyOtp, forgotPassword, resetPassword, addAddress, editAddress, deleteAddress }}>
       {children}
     </AuthContext.Provider>
   );

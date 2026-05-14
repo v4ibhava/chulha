@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { register, login, getMe, updateProfile, addAddress, editAddress, deleteAddress } from '../controllers/authController.js';
+import { sendOtp, verifyOtp, forgotPassword, resetPassword } from '../controllers/otpController.js';
 import { protect } from '../middleware/auth.js';
 
 const router = Router();
@@ -10,5 +11,9 @@ router.put('/profile', protect, updateProfile);
 router.post('/address', protect, addAddress);
 router.put('/address/:id', protect, editAddress);
 router.delete('/address/:id', protect, deleteAddress);
+router.post('/send-otp', sendOtp);
+router.post('/verify-otp', verifyOtp);
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
 
 export default router;
