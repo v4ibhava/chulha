@@ -6,15 +6,23 @@ export default function FoodForm({ food, onClose, onSaved }) {
   const [categories, setCategories] = useState([]);
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    api.get('/categories').then(({ data }) => setCategories(data.categories));
+    api.get('/categories')
+      .then(({ data }) => setCategories(data.categories))
+      .catch(() => setError('Unable to load categories. Check that the API server is running.'));
     if (food) setForm({ name: food.name, description: food.description || '', price: food.price, category: food.category?._id || food.category, isAvailable: food.isAvailable, rating: food.rating || 0 });
   }, [food]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!food && !image) {
+      setError('Please choose an image for this food item.');
+      return;
+    }
     setLoading(true);
+    setError('');
     const fd = new FormData();
     fd.append('name', form.name);
     fd.append('description', form.description);
@@ -30,7 +38,10 @@ export default function FoodForm({ food, onClose, onSaved }) {
       onSaved();
       onClose();
     } catch (err) {
-      alert(err.response?.data?.message || 'Error saving food');
+      const message = err.code === 'ECONNABORTED'
+        ? 'Saving timed out. Check the API server and Cloudinary settings.'
+        : err.response?.data?.message || 'Error saving food';
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -55,7 +66,8 @@ export default function FoodForm({ food, onClose, onSaved }) {
             <input type="checkbox" checked={form.isAvailable} onChange={e => setForm({ ...form, isAvailable: e.target.checked })} className="rounded" />
             <span className="text-sm text-gray-700">Available</span>
           </label>
-          <input type="file" accept="image/*" onChange={e => setImage(e.target.files[0])} className="text-sm" />
+          <input type="file" accept="image/*" onChange={e => setImage(e.target.files[0])} className="text-sm" required={!food} />
+          {error && <p className="text-sm text-red-600">{error}</p>}
           <div className="flex gap-3 pt-2">
             <button type="submit" disabled={loading} className="btn-primary flex-1">{loading ? 'Saving...' : 'Save'}</button>
             <button type="button" onClick={onClose} className="btn-outline flex-1">Cancel</button>

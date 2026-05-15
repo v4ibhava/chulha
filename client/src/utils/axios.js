@@ -1,8 +1,9 @@
 import axios from 'axios';
 
-const API_URL = (import.meta.env.VITE_API_URL || 'https://chulha.onrender.com/api').replace(/\/$/, '');
+const DEFAULT_API_URL = import.meta.env.DEV ? '/api' : 'https://chulha.onrender.com/api';
+const API_URL = (import.meta.env.VITE_API_URL || DEFAULT_API_URL).replace(/\/$/, '');
 
-const api = axios.create({ baseURL: API_URL });
+const api = axios.create({ baseURL: API_URL, timeout: 30000 });
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');

@@ -1,6 +1,11 @@
 import Food from '../models/Food.js';
 import { cloudinary } from '../config/cloudinary.js';
 
+const getUploadedImage = (file) => ({
+  image: file?.secure_url || file?.url || file?.path || '',
+  imagePublicId: file?.public_id || file?.filename || '',
+});
+
 export const getFoods = async (req, res) => {
   const { category, search, page = 1, limit = 12 } = req.query;
   const query = {};
@@ -22,8 +27,10 @@ export const getFood = async (req, res) => {
 
 export const createFood = async (req, res) => {
   const { name, description, price, category, isAvailable, rating } = req.body;
-  const image = req.file ? req.file.path : '';
-  const imagePublicId = req.file ? req.file.filename : '';
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: 'Food image is required' });
+  }
+  const { image, imagePublicId } = getUploadedImage(req.file);
   const food = await Food.create({ name, description, price, category, image, imagePublicId, isAvailable, rating });
   res.status(201).json({ success: true, food });
 };
@@ -42,8 +49,9 @@ export const updateFood = async (req, res) => {
     if (food.imagePublicId) {
       await cloudinary.uploader.destroy(food.imagePublicId);
     }
-    food.image = req.file.path;
-    food.imagePublicId = req.file.filename;
+    const { image, imagePublicId } = getUploadedImage(req.file);
+    food.image = image;
+    food.imagePublicId = imagePublicId;
   }
   await food.save();
   res.json({ success: true, food });

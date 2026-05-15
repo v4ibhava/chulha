@@ -7,7 +7,7 @@ export const getCategories = async (req, res) => {
 
 export const createCategory = async (req, res) => {
   const { name } = req.body;
-  const image = req.file ? req.file.path : '';
+  const image = req.file ? req.file.secure_url || req.file.url || req.file.path || '' : '';
   const category = await Category.create({ name, image });
   res.status(201).json({ success: true, category });
 };
