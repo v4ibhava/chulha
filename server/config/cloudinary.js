@@ -1,8 +1,10 @@
-import { v2 as cloudinary } from 'cloudinary';
-import CloudinaryStorage from 'multer-storage-cloudinary';
+import cloudinaryPackage from 'cloudinary';
+import createCloudinaryStorage from 'multer-storage-cloudinary';
 import dotenv from 'dotenv';
 
 dotenv.config();
+
+const { v2: cloudinary } = cloudinaryPackage;
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -10,11 +12,11 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
+const storage = createCloudinaryStorage({
+  cloudinary: cloudinaryPackage,
   params: {
     folder: 'chulha_foods',
-    allowed_formats: ['jpg', 'png', 'jpeg', 'webp','gif'],
+    allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'gif'],
   },
 });
 

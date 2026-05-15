@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const api = axios.create({ baseURL: 'https://chulha.onrender.com/api' });
+const API_URL = (import.meta.env.VITE_API_URL || 'https://chulha.onrender.com/api').replace(/\/$/, '');
+
+const api = axios.create({ baseURL: API_URL });
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('admin_token');
