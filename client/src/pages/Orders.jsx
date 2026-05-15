@@ -2,16 +2,54 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../utils/axios';
 import { TableSkeleton } from '../components/LoadingSkeleton';
-import { ClipboardDocumentListIcon } from '@heroicons/react/24/solid';
+import { ClipboardDocumentListIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
 
-const statusColors = {
-  pending: 'bg-yellow-100 text-yellow-800',
-  confirmed: 'bg-blue-100 text-blue-800',
-  preparing: 'bg-indigo-100 text-indigo-800',
-  'out-for-delivery': 'bg-purple-100 text-purple-800',
-  delivered: 'bg-green-100 text-green-800',
-  cancelled: 'bg-red-100 text-red-800',
+const statusFlow = ['pending', 'confirmed', 'preparing', 'out-for-delivery', 'delivered'];
+
+const statusMeta = {
+  pending: { label: 'Pending', color: 'bg-yellow-500', text: 'text-yellow-700', bg: 'bg-yellow-100' },
+  confirmed: { label: 'Confirmed', color: 'bg-blue-500', text: 'text-blue-700', bg: 'bg-blue-100' },
+  preparing: { label: 'Preparing', color: 'bg-indigo-500', text: 'text-indigo-700', bg: 'bg-indigo-100' },
+  'out-for-delivery': { label: 'Out for Delivery', color: 'bg-purple-500', text: 'text-purple-700', bg: 'bg-purple-100' },
+  delivered: { label: 'Delivered', color: 'bg-green-500', text: 'text-green-700', bg: 'bg-green-100' },
+  cancelled: { label: 'Cancelled', color: 'bg-red-500', text: 'text-red-700', bg: 'bg-red-100' },
 };
+
+function StatusTimeline({ status }) {
+  if (status === 'cancelled') {
+    return (
+      <div className="flex items-center gap-2 text-red-600 font-bold text-sm">
+        <XCircleIcon className="w-5 h-5" />
+        <span>Order Cancelled</span>
+      </div>
+    );
+  }
+
+  const currentIdx = statusFlow.indexOf(status);
+
+  return (
+    <div className="flex items-center w-full">
+      {statusFlow.map((s, i) => {
+        const done = i <= currentIdx;
+        return (
+          <div key={s} className="flex items-center flex-1 last:flex-none">
+            <div className="flex flex-col items-center">
+              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black transition-all ${done ? 'bg-primary-500 text-white shadow-md shadow-primary-500/30' : 'bg-neutral-200 text-neutral-400'}`}>
+                {done && i < statusFlow.length - 1 ? <CheckCircleIcon className="w-4 h-4" /> : i + 1}
+              </div>
+              <span className={`text-[9px] font-bold mt-1 whitespace-nowrap ${done ? 'text-primary-600' : 'text-neutral-400'}`}>
+                {statusMeta[s].label}
+              </span>
+            </div>
+            {i < statusFlow.length - 1 && (
+              <div className={`flex-1 h-0.5 mx-1.5 mb-5 ${i < currentIdx ? 'bg-primary-500' : 'bg-neutral-200'}`} />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
@@ -33,27 +71,39 @@ export default function Orders() {
           <Link to="/menu" className="btn-primary text-sm">Start Ordering</Link>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-6">
           {orders.map(order => (
             <div key={order._id} className="bg-white rounded-2xl shadow-xl shadow-charcoal-900/5 border border-neutral-100 p-5 animate-fade-in">
               <div className="flex items-center justify-between mb-4">
-                <div>
+                <div className="flex items-center gap-2">
                   <span className="text-xs font-bold text-charcoal-500">Order #{order._id.slice(-8).toUpperCase()}</span>
-                  <span className={`ml-2 px-2.5 py-1 rounded-lg text-[10px] font-bold ${statusColors[order.status]}`}>{order.status}</span>
+                  {order.status === 'cancelled' && (
+                    <span className={`px-2 py-0.5 rounded-lg text-[10px] font-bold ${statusMeta.cancelled.bg} ${statusMeta.cancelled.text}`}>Cancelled</span>
+                  )}
+                  {order.status === 'delivered' && (
+                    <span className={`px-2 py-0.5 rounded-lg text-[10px] font-bold ${statusMeta.delivered.bg} ${statusMeta.delivered.text}`}>Delivered</span>
+                  )}
                 </div>
-                <span className="text-primary-500 font-black">₹{order.totalAmount}</span>
+                <span className="text-primary-500 font-black text-lg">₹{order.totalAmount}</span>
               </div>
-              <div className="space-y-1.5">
+
+              <StatusTimeline status={order.status} />
+
+              <div className="mt-5 space-y-1.5 border-t border-neutral-100 pt-4">
                 {order.items?.map(item => (
-                  <div key={item._id} className="flex items-center gap-2 text-sm">
-                    <span className="text-charcoal-400 font-bold">{item.quantity}x</span>
-                    <span className="font-bold text-charcoal-900">{item.food?.name || 'Item'}</span>
-                    <span className="text-charcoal-500">₹{item.price}</span>
+                  <div key={item._id} className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-2">
+                      <span className="text-charcoal-400 font-bold min-w-[2rem]">{item.quantity}x</span>
+                      <span className="font-bold text-charcoal-900">{item.food?.name || 'Item'}</span>
+                    </div>
+                    <span className="text-charcoal-600">₹{item.price}</span>
                   </div>
                 ))}
               </div>
-              <div className="mt-3 text-[11px] text-charcoal-400 font-medium">
-                Ordered on {new Date(order.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+
+              <div className="mt-4 flex items-center justify-between text-[11px] text-charcoal-400 font-medium">
+                <span>{new Date(order.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                {order.shippingAddress && <span className="truncate max-w-[200px]">{order.shippingAddress}</span>}
               </div>
             </div>
           ))}

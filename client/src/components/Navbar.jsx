@@ -41,6 +41,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-2">
             {user ? (
               <div className="flex items-center gap-2">
+                <Link to="/orders" className="text-xs font-bold text-charcoal-700 hover:text-primary-500 transition-colors px-2">Orders</Link>
                 <Link to="/cart" className="relative p-2 rounded-lg hover:bg-neutral-100 transition-colors">
                   <ShoppingBagIcon className="w-5 h-5 text-charcoal-700" />
                   {totalItems > 0 && (

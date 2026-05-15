@@ -6,7 +6,7 @@ import { sendOtpEmail } from '../utils/email.js';
 const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
 
 export const sendOtp = async (req, res) => {
-  const { email } = req.body;
+  const email = req.body.email?.toLowerCase().trim();
   if (!email) return res.status(400).json({ success: false, message: 'Email is required' });
 
   const otp = generateOtp();
@@ -21,7 +21,8 @@ export const sendOtp = async (req, res) => {
 };
 
 export const verifyOtp = async (req, res) => {
-  const { email, otp } = req.body;
+  const email = req.body.email?.toLowerCase().trim();
+  const { otp } = req.body;
   if (!email || !otp) return res.status(400).json({ success: false, message: 'Email and OTP are required' });
 
   const record = await Otp.findOne({ email, otp, type: 'login', expiresAt: { $gt: new Date() } });
@@ -38,7 +39,7 @@ export const verifyOtp = async (req, res) => {
 };
 
 export const forgotPassword = async (req, res) => {
-  const { email } = req.body;
+  const email = req.body.email?.toLowerCase().trim();
   if (!email) return res.status(400).json({ success: false, message: 'Email is required' });
 
   const user = await User.findOne({ email });
@@ -56,7 +57,8 @@ export const forgotPassword = async (req, res) => {
 };
 
 export const resetPassword = async (req, res) => {
-  const { email, otp, password } = req.body;
+  const email = req.body.email?.toLowerCase().trim();
+  const { otp, password } = req.body;
   if (!email || !otp || !password) return res.status(400).json({ success: false, message: 'Email, OTP, and new password are required' });
 
   const record = await Otp.findOne({ email, otp, type: 'password_reset', expiresAt: { $gt: new Date() } });
