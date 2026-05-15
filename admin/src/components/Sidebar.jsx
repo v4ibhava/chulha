@@ -29,9 +29,7 @@ export default function Sidebar() {
     <div className="flex flex-col h-full bg-charcoal-700 text-white">
       <div className="p-8 border-b border-charcoal-600/50">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20">
-            <span className="text-xl font-bold">C</span>
-          </div>
+          <img src="/images/chulha-logo.png" alt="Chulha" className="h-10 w-auto" />
           <div>
             <h2 className="font-display font-bold text-lg leading-tight tracking-tight">CHULHA</h2>
             <p className="text-charcoal-300 text-[10px] uppercase tracking-[0.1em] font-semibold">Management Panel</p>

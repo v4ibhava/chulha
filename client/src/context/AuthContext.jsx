@@ -23,6 +23,7 @@ export const AuthProvider = ({ children }) => {
     const { data } = await api.post('/auth/login', { email, password });
     localStorage.setItem('token', data.token);
     setUser(data.user);
+    loadUser();
     return data;
   };
 
@@ -30,6 +31,7 @@ export const AuthProvider = ({ children }) => {
     const { data } = await api.post('/auth/register', form);
     localStorage.setItem('token', data.token);
     setUser(data.user);
+    loadUser();
     return data;
   };
 
@@ -47,6 +49,7 @@ export const AuthProvider = ({ children }) => {
     const { data } = await api.post('/auth/verify-otp', { email, otp });
     localStorage.setItem('token', data.token);
     setUser(data.user);
+    loadUser();
     return data;
   };
 

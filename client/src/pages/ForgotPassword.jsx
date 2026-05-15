@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
-import { FireIcon } from '@heroicons/react/24/solid';
 
 export default function ForgotPassword() {
   const { forgotPassword, resetPassword } = useAuth();
@@ -48,10 +47,8 @@ export default function ForgotPassword() {
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl shadow-charcoal-900/5 border border-neutral-100 p-8 animate-fade-in">
         <div className="text-center mb-8">
-          <div className="w-12 h-12 bg-primary-500 rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-primary-500/20">
-            <FireIcon className="w-6 h-6 text-white" />
-          </div>
-          <h2 className="text-2xl font-bold mt-3 text-charcoal-900">
+          <img src="/images/chulha-logo.png" alt="Chulha" className="h-12 w-auto mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-charcoal-900">
             {step === 'email' ? 'Forgot Password' : 'Reset Password'}
           </h2>
           <p className="text-charcoal-500 text-sm">

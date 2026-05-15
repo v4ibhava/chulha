@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  /* Chulha Primary Colors (Deep Orange) */
-  --color-primary-50: #fff7ed;
-  --color-primary-100: #ffedd5;
-  --color-primary-200: #fed7aa;
-  --color-primary-300: #fdba74;
-  --color-primary-400: #fb923c;
-  --color-primary-500: #d35400;
-  --color-primary-600: #b34700;
-  --color-primary-700: #933a00;
-  --color-primary-800: #732d00;
-  --color-primary-900: #532000;
+  /* Chulha Primary Colors (Red Theme) */
+  --color-primary-50: #fef2f2;
+  --color-primary-100: #fee2e2;
+  --color-primary-200: #fecaca;
+  --color-primary-300: #fca5a5;
+  --color-primary-400: #f87171;
+  --color-primary-500: #dc2626;
+  --color-primary-600: #b91c1c;
+  --color-primary-700: #991b1b;
+  --color-primary-800: #7f1d1d;
+  --color-primary-900: #450a0a;
 
   /* Charcoal Colors */
   --color-charcoal-50: #f6f7f9;
@@ -74,5 +74,5 @@ h1, h2, h3, h4, h5, h6 {
   @apply w-full px-4 py-2.5 border border-neutral-300 bg-white rounded-lg focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none transition-all duration-200;
 }
 .card {
-  @apply bg-white rounded-2xl shadow-[0px_2px_12px_rgba(211,84,0,0.05)] hover:shadow-[0px_4px_20px_rgba(211,84,0,0.08)] transition-all duration-300 border border-neutral-200;
+  @apply bg-white rounded-2xl shadow-[0px_2px_12px_rgba(220,38,38,0.05)] hover:shadow-[0px_4px_20px_rgba(220,38,38,0.08)] transition-all duration-300 border border-neutral-200;
 }

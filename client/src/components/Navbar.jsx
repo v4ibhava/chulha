@@ -26,9 +26,7 @@ export default function Navbar() {
           {/* Left: Logo + Address */}
           <div className="flex items-center gap-3">
             <Link to="/" className="flex items-center gap-2 group shrink-0">
-              <div className="w-9 h-9 bg-primary-500 rounded-xl flex items-center justify-center shadow-md shadow-primary-500/20 group-hover:scale-110 transition-all">
-                <span className="text-white text-base font-black">C</span>
-              </div>
+              <img src="/images/chulha-logo.png" alt="Chulha" className="h-8 w-auto group-hover:scale-110 transition-all" />
               <span className="text-lg font-display font-black text-charcoal-900 tracking-tight hidden sm:inline">CHULHA</span>
             </Link>
             <div className="hidden md:flex items-center gap-1.5 pl-3 border-l border-neutral-200">

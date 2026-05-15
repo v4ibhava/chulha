@@ -6,9 +6,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-10">
         <div className="col-span-1 md:col-span-1">
           <div className="flex items-center gap-2.5 mb-4">
-            <div className="w-7 h-7 bg-primary-500 rounded-lg flex items-center justify-center">
-              <span className="text-white text-sm font-black">C</span>
-            </div>
+            <img src="/images/chulha-logo.png" alt="Chulha" className="h-7 w-auto" />
             <span className="text-lg font-display font-black text-white tracking-tight">CHULHA</span>
           </div>
           <p className="text-xs leading-relaxed mb-5">
