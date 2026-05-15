@@ -18,6 +18,11 @@ const errorHandler = (err, req, res, next) => {
     message = 'Resource not found';
   }
 
+  if (err.name === 'MulterError') {
+    statusCode = 400;
+    if (err.code === 'LIMIT_FILE_SIZE') message = 'File too large. Maximum size is 5MB';
+  }
+
   res.status(statusCode).json({ success: false, message });
 };
 

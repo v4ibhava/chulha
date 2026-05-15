@@ -16,6 +16,7 @@ const foodSchema = new mongoose.Schema({
     min: 0
   },
   image: { type: String, default: '' },
+  imagePublicId: { type: String, default: '' },
   category: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
