@@ -2,8 +2,13 @@ import 'express-async-errors';
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
+import dns from 'dns';
+
+// Force Node.js to resolve DNS queries using IPv4 first to bypass local ISP SRV resolution bugs
+dns.setDefaultResultOrder('ipv4first');
 
 import connectDB from './config/db.js';
+
 
 import errorHandler from './middleware/error.js';
 import authRoutes from './routes/auth.js';

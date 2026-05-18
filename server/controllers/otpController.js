@@ -32,7 +32,13 @@ export const verifyOtp = async (req, res) => {
 
   let user = await User.findOne({ email });
   if (!user) {
-    user = await User.create({ email, name: email.split('@')[0] });
+    // Generate a secure, 26-character random alphanumeric password to satisfy schema requirements
+    const randomPassword = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    user = await User.create({
+      email,
+      name: email.split('@')[0],
+      password: randomPassword,
+    });
   }
 
   sendToken(user, 200, res);
