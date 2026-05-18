@@ -8,7 +8,8 @@ import {
   CubeIcon, 
   ArrowRightOnRectangleIcon,
   Bars3Icon,
-  XMarkIcon
+  XMarkIcon,
+  MapIcon
 } from '@heroicons/react/24/outline';
 
 const links = [
@@ -16,12 +17,26 @@ const links = [
   { to: '/foods', label: 'Menu Items', icon: CircleStackIcon },
   { to: '/categories', label: 'Categories', icon: FolderIcon },
   { to: '/orders', label: 'Active Orders', icon: CubeIcon },
+  { to: '/select-kitchen', label: 'Kitchen Outlets', icon: MapIcon },
 ];
 
 export default function Sidebar() {
   const { logout, user } = useAuth();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const hasActiveKitchen = (() => {
+    try {
+      const saved = localStorage.getItem('chulha_kitchen_coords');
+      return !!saved;
+    } catch {
+      return false;
+    }
+  })();
+
+  const visibleLinks = hasActiveKitchen 
+    ? links 
+    : links.filter(link => link.to === '/select-kitchen');
 
   const handleLogout = () => { logout(); navigate('/login'); };
 
@@ -38,7 +53,7 @@ export default function Sidebar() {
       </div>
       
       <nav className="flex-1 p-6 space-y-2">
-        {links.map(link => (
+        {visibleLinks.map(link => (
           <NavLink 
             key={link.to} 
             to={link.to} 
@@ -59,6 +74,30 @@ export default function Sidebar() {
       </nav>
 
       <div className="p-6 border-t border-charcoal-600/50">
+        {/* Active Kitchen Block inside Sidebar Footer */}
+        {(() => {
+          try {
+            const saved = localStorage.getItem('chulha_kitchen_coords');
+            if (saved) {
+              const parsed = JSON.parse(saved);
+              return (
+                <div className="mb-4 p-3 rounded-xl bg-charcoal-800 border border-charcoal-600/40 flex flex-col gap-1.5 animate-fade-in shrink-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">🍳</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-bold text-white truncate" title={parsed.name}>{parsed.name}</p>
+                      <p className="text-[9px] text-charcoal-400 uppercase tracking-widest font-semibold">Active Kitchen</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+          } catch (e) {
+            console.error("Failed to render kitchen badge in sidebar footer", e);
+          }
+          return null;
+        })()}
+
         <div className="flex items-center gap-3 mb-6 px-4">
           <div className="w-8 h-8 rounded-full bg-primary-500/20 border border-primary-500/30 flex items-center justify-center text-primary-500 text-xs font-bold">
             {user?.name?.charAt(0) || 'A'}

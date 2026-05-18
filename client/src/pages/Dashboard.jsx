@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import { PlusIcon, PencilIcon, TrashIcon, MapPinIcon, StarIcon, XMarkIcon } from '@heroicons/react/24/solid';
+import GoogleMapPicker from '../components/GoogleMapPicker';
 
 export default function Dashboard() {
   const { user, addAddress, editAddress, deleteAddress } = useAuth();
@@ -254,68 +255,86 @@ export default function Dashboard() {
       {/* Add / Edit Address Modal */}
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-charcoal-900/40 backdrop-blur-sm animate-fade-in" onClick={() => setShowForm(false)}>
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 animate-slide-up" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-5">
-              <h3 className="font-bold text-charcoal-900">{editingId ? 'Edit Address' : 'Add Address'}</h3>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl p-6 animate-slide-up" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-bold text-lg text-charcoal-900">{editingId ? 'Edit Address' : 'Add Address'}</h3>
               <button onClick={() => setShowForm(false)} className="p-1.5 rounded-lg hover:bg-neutral-100 text-charcoal-400 transition-colors">
                 <XMarkIcon className="w-5 h-5" />
               </button>
             </div>
-            <form onSubmit={handleSubmit} className="space-y-3.5">
-              <div>
-                <label className="block text-xs font-bold text-charcoal-600 mb-1">Label</label>
-                <select value={form.label} onChange={e => setForm({ ...form, label: e.target.value })} className="input-field text-sm py-2.5">
-                  <option value="Home">Home</option>
-                  <option value="Work">Work</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-charcoal-600 mb-1">Street Address *</label>
-                <input type="text" value={form.street} onChange={e => setForm({ ...form, street: e.target.value })} className="input-field text-sm py-2.5" placeholder="123 Main Street" required />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-charcoal-600 mb-1">City</label>
-                  <input type="text" value={form.city} onChange={e => setForm({ ...form, city: e.target.value })} className="input-field text-sm py-2.5" placeholder="Mumbai" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-charcoal-600 mb-1">State</label>
-                  <input type="text" value={form.state} onChange={e => setForm({ ...form, state: e.target.value })} className="input-field text-sm py-2.5" placeholder="Maharashtra" />
-                </div>
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-charcoal-600 mb-1">Pincode</label>
-                <input type="text" value={form.pincode} onChange={e => setForm({ ...form, pincode: e.target.value })} className="input-field text-sm py-2.5" placeholder="400001" />
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-2">
+              {/* Left Column: Visual Map Picker */}
+              <div className="flex flex-col h-[320px] lg:h-[420px]">
+                <label className="block text-xs font-bold text-charcoal-600 mb-1.5">Locate on Map</label>
+                <GoogleMapPicker
+                  defaultLat={form.lat}
+                  defaultLng={form.lng}
+                  onLocationSelect={(loc) => {
+                    setForm(prev => ({
+                      ...prev,
+                      street: loc.street || prev.street,
+                      city: loc.city || prev.city,
+                      state: loc.state || prev.state,
+                      pincode: loc.pincode || prev.pincode,
+                      lat: loc.lat ? String(loc.lat) : prev.lat,
+                      lng: loc.lng ? String(loc.lng) : prev.lng,
+                    }));
+                  }}
+                />
               </div>
 
-              {/* Get My Location Button */}
-              <button
-                type="button"
-                onClick={getLocation}
-                disabled={locating}
-                className="w-full flex items-center justify-center gap-2 bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-charcoal-700 font-bold py-2.5 rounded-xl text-sm transition-all disabled:opacity-50"
-              >
-                <span className="text-base">{locating ? '⏳' : '📍'}</span>
-                {locating ? 'Getting location...' : form.lat ? 'Location captured (tap to refresh)' : 'Get My Location'}
-              </button>
-
-              {form.lat && form.lng && (
-                <div className="text-[10px] text-charcoal-400 text-center font-mono">
-                  Lat: {parseFloat(form.lat).toFixed(5)}, Lng: {parseFloat(form.lng).toFixed(5)}
+              {/* Right Column: Address Details Form */}
+              <form onSubmit={handleSubmit} className="space-y-3.5 flex flex-col justify-between">
+                <div className="space-y-3.5">
+                  <div>
+                    <label className="block text-xs font-bold text-charcoal-600 mb-1">Label</label>
+                    <select value={form.label} onChange={e => setForm({ ...form, label: e.target.value })} className="input-field text-sm py-2.5">
+                      <option value="Home">Home</option>
+                      <option value="Work">Work</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-charcoal-600 mb-1">Street Address *</label>
+                    <input type="text" value={form.street} onChange={e => setForm({ ...form, street: e.target.value })} className="input-field text-sm py-2.5" placeholder="123 Main Street" required />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-bold text-charcoal-600 mb-1">City</label>
+                      <input type="text" value={form.city} onChange={e => setForm({ ...form, city: e.target.value })} className="input-field text-sm py-2.5" placeholder="Mumbai" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-charcoal-600 mb-1">State</label>
+                      <input type="text" value={form.state} onChange={e => setForm({ ...form, state: e.target.value })} className="input-field text-sm py-2.5" placeholder="Maharashtra" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-charcoal-600 mb-1">Pincode</label>
+                    <input type="text" value={form.pincode} onChange={e => setForm({ ...form, pincode: e.target.value })} className="input-field text-sm py-2.5" placeholder="400001" />
+                  </div>
                 </div>
-              )}
 
-              <div className="flex gap-3 pt-2">
-                <button type="button" onClick={() => setShowForm(false)} className="flex-1 border-2 border-neutral-200 text-charcoal-700 font-bold py-2.5 rounded-xl text-sm hover:bg-neutral-50 transition-all">Cancel</button>
-                <button type="submit" disabled={submitting} className="flex-1 bg-primary-500 text-white font-bold py-2.5 rounded-xl shadow-md shadow-primary-500/20 hover:shadow-primary-500/30 active:scale-95 transition-all text-sm disabled:opacity-50">
-                  {submitting ? 'Saving...' : editingId ? 'Update' : 'Add'}
-                </button>
-              </div>
-            </form>
+                <div className="pt-4 border-t border-neutral-100">
+                  {form.lat && form.lng && (
+                    <div className="text-[10px] text-charcoal-400 font-mono mb-3 text-center">
+                      GPS Captured: {parseFloat(form.lat).toFixed(5)}, {parseFloat(form.lng).toFixed(5)}
+                    </div>
+                  )}
+
+                  <div className="flex gap-3">
+                    <button type="button" onClick={() => setShowForm(false)} className="flex-1 border-2 border-neutral-200 text-charcoal-700 font-bold py-2.5 rounded-xl text-sm hover:bg-neutral-50 transition-all">Cancel</button>
+                    <button type="submit" disabled={submitting} className="flex-1 bg-primary-500 text-white font-bold py-2.5 rounded-xl shadow-md shadow-primary-500/20 hover:shadow-primary-500/30 active:scale-95 transition-all text-sm disabled:opacity-50">
+                      {submitting ? 'Saving...' : editingId ? 'Update' : 'Add'}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}
+
     </div>
   );
 }
